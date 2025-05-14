@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Dev Practice - Contact Form & To-Do List</title>
+    <style>
+        /* Global Styles - Enhanced */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+            background-image: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        h1, h2, h3 {
+            margin-bottom: 20px;
+            color: #2c3e50;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        
+        h2 {
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        h2::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            height: 3px;
+            width: 50px;
+            background-color: #3498db;
+            border-radius: 3px;
+        }
+        
+        /* Header Styles with Flexbox - Enhanced */
+        header {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        
+        .logo::before {
+            content: "";
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background-color: #2ecc71;
+            border-radius: 50%;
+            left: -15px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 30px;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s;
+            font-weight: 500;
+            position: relative;
+            padding: 5px 0;
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: white;
+            transition: width 0.3s ease;
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        /* Main Content Grid Layout - Enhanced */
+        main {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 40px;
+            margin: 40px 0;
+        }
+        
+        @media (min-width: 768px) {
+            main {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        section {
+            background-color: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+        
+        section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(to bottom, #3498db, #2ecc71);
+        }
+        
+        /* Contact Form Styles - Enhanced */
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 500;
+            color: #34495e;
+            transition: all 0.3s;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #e1e1e1;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.15);
+            background-color: #fff;
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+        
+        .error {
+            color: #e74c3c;
+            font-size: 14px;
+            margin-top: 8px;
+            display: none;
+            font-weight: 500;
+            padding-left: 5px;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        button {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            border: none;
+            padding: 14px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: all 0.5s;
+        }
+        
+        button:hover {
+            background: linear-gradient(135deg, #2980b9 0%, #2573a7 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+        }
+        
+        button:hover::before {
+            left: 100%;
+        }
+        
+        .success-message {
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: none;
+            font-weight: 500;
+            box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
+            animation: slideIn 0.5s ease;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* To-Do List Styles - Enhanced */
+        .todo-container input {
+            margin-right: 10px;
+            flex: 1;
+        }
+        
+        .todo-input-container {
+            display: flex;
+            margin-bottom: 25px;
+            gap: 10px;
+        }
+        
+        .todo-list {
+            list-style: none;
+            margin-top: 10px;
+        }
+        
+        .todo-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            margin-bottom: 15px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            transition: all 0.3s;
+            border-left: 5px solid #3498db;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .todo-item:hover {
+            background-color: #f1f1f1;
+            transform: translateX(5px);
+        }
+        
+        .todo-text {
+            flex-grow: 1;
+            font-size: 16px;
+            font-weight: 500;
+            color: #34495e;
+            transition: all 0.3s;
+        }
+        
+        .completed {
+            text-decoration: line-through;
+            color: #95a5a6;
+        }
+        
+        .todo-item.completed-task {
+            border-left-color: #2ecc71;
+            background-color: #f0fff4;
+        }
+        
+        .delete-btn, .complete-btn {
+            padding: 8px 16px;
+            margin-left: 10px;
+            font-size: 14px;
+            border-radius: 6px;
+        }
+        
+        .delete-btn {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            box-shadow: 0 4px 12px rgba(231, 76, 60, 0.2);
+        }
+        
+        .delete-btn:hover {
+            background: linear-gradient(135deg, #c0392b 0%, #a93226 100%);
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+        }
+        
+        .complete-btn {
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+            box-shadow: 0 4px 12px rgba(46, 204, 113, 0.2);
+        }
+        
+        .complete-btn:hover {
+            background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+            box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
+        }
+        
+        /* Empty state styling */
+        .empty-state {
+            text-align: center;
+            padding: 30px;
+            color: #95a5a6;
+            display: none;
+        }
+        
+        .empty-state p {
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        
+        /* Footer Styles - Enhanced */
+        footer {
+            background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);
+            color: white;
+            text-align: center;
+            padding: 30px 0;
+            margin-top: 50px;
+            position: relative;
+        }
+        
+        footer p {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        
+        /* Responsive Media Queries - Enhanced */
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+            }
+            
+            .nav-links {
+                margin-top: 15px;
+                width: 100%;
+                justify-content: space-around;
+            }
+            
+            .nav-links li {
+                margin: 0;
+            }
+            
+            section {
+                padding: 20px;
+            }
+            
+            .todo-input-container {
+                flex-direction: column;
+            }
+            
+            button {
+                width: 100%;
+            }
+        }
+        
+        /* Custom animations */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .pulse {
+            animation: pulse 1.5s infinite;
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #3498db;
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #2980b9;
+        }
+        
+        /* Focus styles for accessibility */
+        input:focus-visible, 
+        textarea:focus-visible, 
+        select:focus-visible, 
+        button:focus-visible {
+            outline: 2px solid #3498db;
+            outline-offset: 2px;
+        }
+        
+        /* Form field specific styles */
+        .form-group.has-icon {
+            position: relative;
+        }
+        
+        .form-group.has-icon input,
+        .form-group.has-icon textarea {
+            padding-left: 40px;
+        }
+        
+        .form-icon {
+            position: absolute;
+            left: 12px;
+            top: 45px;
+            color: #7f8c8d;
+        }
+        
+        /* Custom select styling */
+        select {
+            appearance: none;
+            background-image: url("data:");
+            background-repeat: no-repeat;
+            background-position: right 12px top 50%;
+            background-size: 12px auto;
+            padding-right: 30px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">MyWebApp</div>
+                <ul class="nav-links">
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                    <li><a href="#todo">To-Do List</a></li>
+                    <li><a href="#about">About</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <main>
+            <!-- Contact Form Section -->
+            <section id="contact">
+                <h2>Contact Us</h2>
+                <form id="contactForm" class="contact-form">
+                    <div class="form-group">
+                        <label for="name">Name *</label>
+                        <input type="text" id="name" placeholder="Your full name">
+                        <div class="error" id="nameError">Please enter your name</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email *</label>
+                        <input type="email" id="email" placeholder="your.email@example.com">
+                        <div class="error" id="emailError">Please enter a valid email address</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" placeholder="(123) 456-7890">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="course">Course *</label>
+                        <select id="course">
+                            <option value="">-- Select a Course --</option>
+                            <option value="Web development">Web development</option>
+                            <option value="Web Developer">Web Developer</option>
+                            <option value="App Development">App Development</option>
+                            <option value="other">Other</option>
+                        </select>
+                        <div class="error" id="courseError">Please select a course</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="message">Message *</label>
+                        <textarea id="message" placeholder="Your message here..."></textarea>
+                        <div class="error" id="messageError">Please enter your message</div>
+                    </div>
+                    
+                    <button type="submit" id="submitBtn">Send Message</button>
+                    <div class="success-message" id="successMessage">
+                        Thank you! Your message has been sent successfully.
+                    </div>
+                </form>
+            </section>
+
+            <!-- To-Do List Section -->
+            <section id="todo">
+                <h2>My To-Do List</h2>
+                <div class="todo-container">
+                    <div class="todo-input-container">
+                        <input type="text" id="todoInput" placeholder="Add a new task...">
+                        <button id="addTodoBtn">Add Task</button>
+                    </div>
+                    <div class="empty-state" id="emptyTodoList">
+                        <p>Your to-do list is empty. Add a task to get started!</p>
+                    </div>
+                    <ul id="todoList" class="todo-list">
+                        <!-- To-do items will be added here dynamically -->
+                    </ul>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 MyWebApp. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Form Validation
+        document.getElementById('contactForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            // Reset all error messages
+            document.querySelectorAll('.error').forEach(error => {
+                error.style.display = 'none';
+            });
+            
+            let hasError = false;
+            
+            // Validate Name
+            const name = document.getElementById('name').value.trim();
+            if (name === '') {
+                document.getElementById('nameError').style.display = 'block';
+                hasError = true;
+            }
+            
+            // Validate Email
+            const email = document.getElementById('email').value.trim();
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (email === '' || !emailRegex.test(email)) {
+                document.getElementById('emailError').style.display = 'block';
+                hasError = true;
+            }
+            
+            // Validate course
+            const course = document.getElementById('course').value;
+            if (course === '') {
+                document.getElementById('courseError').style.display = 'block';
+                hasError = true;
+            }
+            
+            // Validate Message
+            const message = document.getElementById('message').value.trim();
+            if (message === '') {
+                document.getElementById('messageError').style.display = 'block';
+                hasError = true;
+            }
+            
+            // If no errors, show success message
+            if (!hasError) {
+                document.getElementById('successMessage').style.display = 'block';
+                
+                // Reset form after successful submission
+                setTimeout(() => {
+                    document.getElementById('contactForm').reset();
+                    document.getElementById('successMessage').style.display = 'none';
+                }, 3000);
+            }
+        });
+        
+        // To-Do List Functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const todoInput = document.getElementById('todoInput');
+            const addTodoBtn = document.getElementById('addTodoBtn');
+            const todoList = document.getElementById('todoList');
+            const emptyTodoList = document.getElementById('emptyTodoList');
+            
+            // Check if todo list is empty and show empty state
+            function checkEmptyState() {
+                if (todoList.children.length === 0) {
+                    emptyTodoList.style.display = 'block';
+                } else {
+                    emptyTodoList.style.display = 'none';
+                }
+            }
+            
+            // Load existing todos from localStorage
+            loadTodos();
+            checkEmptyState(); // Check initially
+            
+            // Add Todo
+            addTodoBtn.addEventListener('click', function() {
+                addTodo();
+            });
+            
+            // Add todo when pressing Enter
+            todoInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    addTodo();
+                }
+            });
+            
+            function addTodo() {
+                const todoText = todoInput.value.trim();
+                
+                if (todoText !== '') {
+                    // Create todo object
+                    const todo = {
+                        id: Date.now(),
+                        text: todoText,
+                        completed: false
+                    };
+                    
+                    // Add to DOM
+                    createTodoElement(todo);
+                    
+                    // Save to localStorage
+                    saveTodo(todo);
+                    
+                    // Clear input
+                    todoInput.value = '';
+                    
+                    // Check empty state
+                    checkEmptyState();
+                }
+            }
+            
+            function createTodoElement(todo) {
+                const li = document.createElement('li');
+                li.classList.add('todo-item');
+                if (todo.completed) {
+                    li.classList.add('completed-task');
+                }
+                li.dataset.id = todo.id;
+                
+                const span = document.createElement('span');
+                span.classList.add('todo-text');
+                span.textContent = todo.text;
+                if (todo.completed) {
+                    span.classList.add('completed');
+                }
+                
+                const completeBtn = document.createElement('button');
+                completeBtn.classList.add('complete-btn');
+                completeBtn.textContent = todo.completed ? 'Undo' : 'Complete';
+                completeBtn.addEventListener('click', function() {
+                    toggleComplete(todo.id);
+                });
+                
+                const deleteBtn = document.createElement('button');
+                deleteBtn.classList.add('delete-btn');
+                deleteBtn.textContent = 'Delete';
+                deleteBtn.addEventListener('click', function() {
+                    deleteTodo(todo.id);
+                });
+                
+                li.appendChild(span);
+                li.appendChild(completeBtn);
+                li.appendChild(deleteBtn);
+                
+                todoList.appendChild(li);
+            }
+            
+            function toggleComplete(id) {
+                // Update in DOM
+                const todoItem = document.querySelector(`.todo-item[data-id="${id}"]`);
+                const todoText = todoItem.querySelector('.todo-text');
+                const completeBtn = todoItem.querySelector('.complete-btn');
+                
+                todoText.classList.toggle('completed');
+                todoItem.classList.toggle('completed-task');
+                completeBtn.textContent = todoText.classList.contains('completed') ? 'Undo' : 'Complete';
+                
+                // Update in localStorage
+                const todos = JSON.parse(localStorage.getItem('todos') || '[]');
+                const updatedTodos = todos.map(todo => {
+                    if (todo.id === Number(id)) {
+                        todo.completed = !todo.completed;
+                    }
+                    return todo;
+                });
+                
+                localStorage.setItem('todos', JSON.stringify(updatedTodos));
+            }
+            
+            function deleteTodo(id) {
+                // Remove from DOM
+                const todoItem = document.querySelector(`.todo-item[data-id="${id}"]`);
+                todoItem.remove();
+                
+                // Remove from localStorage
+                const todos = JSON.parse(localStorage.getItem('todos') || '[]');
+                const filteredTodos = todos.filter(todo => todo.id !== Number(id));
+                localStorage.setItem('todos', JSON.stringify(filteredTodos));
+                
+                // Check empty state
+                checkEmptyState();
+            }
+            
+            function saveTodo(todo) {
+                const todos = JSON.parse(localStorage.getItem('todos') || '[]');
+                todos.push(todo);
+                localStorage.setItem('todos', JSON.stringify(todos));
+            }
+            
+            function loadTodos() {
+                const todos = JSON.parse(localStorage.getItem('todos') || '[]');
+                todos.forEach(todo => {
+                    createTodoElement(todo);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
